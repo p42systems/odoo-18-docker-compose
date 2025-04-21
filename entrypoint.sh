@@ -10,6 +10,11 @@ set -e
 : ${PASSWORD:=${DB_ENV_POSTGRES_PASSWORD:=${POSTGRES_PASSWORD:='odoo17@2023'}}}
 
 
+# Install logrotate if not already installed
+if ! dpkg -l | grep -q logrotate; then
+    apt-get update && apt-get install -y logrotate && apt install python3.12-venv
+fi
+\
 # Set up a virtual environment for odoo
 VENV_DIR="/opt/odoo18"  # Choose a directory to create the venv
 python3 -m venv $VENV_DIR
@@ -21,10 +26,6 @@ source $VENV_DIR/bin/activate
 pip3 install pip --upgrade
 pip3 install -r /etc/odoo/requirements.txt
 
-# Install logrotate if not already installed
-if ! dpkg -l | grep -q logrotate; then
-    apt-get update && apt-get install -y logrotate
-fi
 
 # Copy logrotate config
 cp /etc/odoo/logrotate /etc/logrotate.d/odoo
