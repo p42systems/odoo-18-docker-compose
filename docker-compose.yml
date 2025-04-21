@@ -31,5 +31,6 @@ services:
       - ./entrypoint.sh:/entrypoint.sh
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo
+      - ./opt/odoo18:/opt/odoo18
     restart: always             # run as a service
     

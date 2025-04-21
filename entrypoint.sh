@@ -9,11 +9,17 @@ set -e
 : ${USER:=${DB_ENV_POSTGRES_USER:=${POSTGRES_USER:='odoo'}}}
 : ${PASSWORD:=${DB_ENV_POSTGRES_PASSWORD:=${POSTGRES_PASSWORD:='odoo17@2023'}}}
 
-# install python packages
-pip3 install pip --upgrade --break-system-packages ## DS 4212025
-pip3 install -r /etc/odoo/requirements.txt --break-system-packages
 
-# sed -i 's|raise werkzeug.exceptions.BadRequest(msg)|self.jsonrequest = {}|g' /usr/lib/python3/dist-packages/odoo/http.py
+# Set up a virtual environment for odoo
+VENV_DIR="/opt/odoo18"  # Choose a directory to create the venv
+python3 -m venv $VENV_DIR
+
+# Activate the virtual environment
+source $VENV_DIR/bin/activate
+
+# Install python packages
+pip3 install pip --upgrade
+pip3 install -r /etc/odoo/requirements.txt
 
 # Install logrotate if not already installed
 if ! dpkg -l | grep -q logrotate; then
@@ -25,7 +31,6 @@ cp /etc/odoo/logrotate /etc/logrotate.d/odoo
 
 # Start cron daemon (required for logrotate)
 cron
-
 DB_ARGS=()
 function check_config() {
     param="$1"
