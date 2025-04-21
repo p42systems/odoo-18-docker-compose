@@ -12,7 +12,7 @@ set -e
 
 # Install logrotate if not already installed
 if ! dpkg -l | grep -q logrotate; then
-    apt-get update && apt-get install -y logrotate && apt install python3.12-venv
+    apt-get update && apt-get install -y logrotate && apt-get install -y python3.12-venv
 fi
 \
 # Set up a virtual environment for odoo
